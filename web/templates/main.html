@@ -4,10 +4,9 @@
 
     <div id="main-board">
         <div class="sentence-container">
-        {%for i in range(10)%}
+        {%for inspiration in inspiration_list%}
             <div class="sentence-item">
-                <i class="fa fa-star"></i>
-                <div> some content you can type here, i put something nonsence here.</div>
+                <div>{{inspiration.content}}</div>
             </div>
         {%endfor%}
 

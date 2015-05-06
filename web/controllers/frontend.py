@@ -7,7 +7,8 @@ from web.model import Label, Inspiration, LabelInspirationRelationShip
 
 @app.route('/')
 def main():
-    return render_template("main.html")
+    inspiration_list = Inspiration.select().order_by(Inspiration.id.desc()).limit(20)
+    return render_template("main.html",inspiration_list=inspiration_list)
 
 
 @app.route('/login', methods=["POST"])
@@ -40,8 +41,9 @@ def write_inspiration():
 
         ## make labels
         label_str = request.form.get("labels")
-        label_name_list = re.split(r"\W+", label_str)
-        label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_list]
+        #### use set to avoid duplicate name
+        label_name_set = set(re.split(r"\W+", label_str))
+        label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_set]
 
         ## make rs
         for label in label_list:
