@@ -3,7 +3,7 @@ import re
 from flask import render_template, request, redirect, flash, session
 
 from web.app import app, auth
-from web.model import Label, Inspiration, LabelInspirationRelationShip
+from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
 
 @app.route('/')
 def main():
@@ -51,6 +51,28 @@ def write_inspiration():
         for label in label_list:
             LabelInspirationRelationShip.get_or_create(inspiration=inspiration, label=label)
         return redirect("/")
+
+@app.route('/search')
+def search():
+    keyword = request.args.get("keyword")
+    ### do not consider splitting keyword firstly
+
+    print "keyword: %s"%keyword
+    ii_list = InspirationIndex.select().where(InspirationIndex.keyword==keyword)
+    print "ii_list: %s"%len(list(ii_list))
+    inspiration_list = [ ii.inspiration for ii in ii_list]
+    print "inspiration_list: %s"%len(inspiration_list)
+    return render_template("search.html",inspiration_list=inspiration_list)
+
+
+
+
+
+
+
+
+
+
 
 
 

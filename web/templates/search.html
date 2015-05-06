@@ -1,0 +1,18 @@
+{%extends "base.html"%}
+
+{%block content%}
+
+    <div id="main-board">
+        <div class="sentence-container">
+        {%for inspiration in inspiration_list%}
+            <div class="sentence-item">
+                <div>{{inspiration.content}}</div>
+            </div>
+        {%endfor%}
+
+
+        </div>
+    </div>
+
+
+{%endblock%}
