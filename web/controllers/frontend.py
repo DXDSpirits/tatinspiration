@@ -3,7 +3,6 @@
 from flask import render_template, request, redirect, flash, session
 
 from web.app import app, auth
-from web.model import User
 
 @app.route('/')
 def main():
