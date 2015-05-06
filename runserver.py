@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from web.app import app, auth
-from web.model import Label, Inspiration, LabelInspirationRelationShip
+from flask_failsafe import failsafe
+
+# for flask failsafe
+@failsafe
+def create_app():
+    from web.app import app
+    return app
 
 if(__name__ == "__main__"):
+    app = create_app()
+    from web.app import auth
     app.debug = app.config["DEBUG_MODE"]
     # move this to script 
-    init_class = [auth.User, Label, Inspiration, LabelInspirationRelationShip]
+    from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
+    init_class = [auth.User, Label, Inspiration, LabelInspirationRelationShip, InspirationIndex]
 
     for kls in init_class:
         kls.create_table(fail_silently=True)

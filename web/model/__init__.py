@@ -1,2 +1,2 @@
 ﻿# -*- coding: utf-8 -*-
-from .content import Label, Inspiration, LabelInspirationRelationShip
+from .content import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex

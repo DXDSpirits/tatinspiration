@@ -38,6 +38,8 @@ def write_inspiration():
 
         ## make inspiration
         inspiration = Inspiration.create(author=user, content=content)
+        ## we can defer this by using message-queue
+        inspiration.make_keyword_index()
 
         ## make labels
         label_str = request.form.get("labels")
