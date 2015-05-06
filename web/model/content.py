@@ -11,7 +11,7 @@ from web.app import db, auth
 
 class Label(db.Model):
     name        = CharField(unique=True)
-    count       = IntegerField()
+    count       = IntegerField(default=0)
 
 class Inspiration(db.Model):
     author      = ForeignKeyField(auth.User)

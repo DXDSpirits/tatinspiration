@@ -12,7 +12,10 @@
     <span class="navbar-brand">{{config.SITENAME}}</span>
   </div>
   <!-- Collect the nav links, forms, and other content for toggling -->
-  
+     <ul class="nav navbar-nav">
+        <li class="active"><a href="/">Home</a></li>
+        <li class="active"><a href="/write">Wite New Inspiration</a></li>
+      </ul>
     <ul class="nav navbar-nav navbar-right"><li>
       {% if user %}
         <a href="{{ url_for('auth.logout') }}?next=/">logout</a>
