@@ -17,7 +17,7 @@ class User(db.Model):
     email           = CharField()
     password        = CharField()
 
-    create_time     = DateTimeField()
+    create_time     = DateTimeField(default=datetime.datetime.now)
 
 
 
