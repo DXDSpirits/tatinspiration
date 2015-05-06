@@ -1,0 +1,54 @@
+.navbar-brand {
+    padding-left: 0px;
+}
+#rightbar {
+    width: 240px;
+    border-right: 1px solid whitesmoke;
+    float: right;
+    padding-right: 20px;
+}
+#rightbar .section-item {
+    padding: 5px 10px;
+    border-bottom: 1px solid whitesmoke;
+    cursor: pointer;
+}
+#rightbar .section-item:hover{
+    color: firebrick;
+    border-bottom: 1px solid firebrick;
+}
+
+#main-board{
+    width: 480px;
+}
+
+#main-board .sentence-item {
+    padding: 20px;
+    border-bottom: 1px solid whitesmoke;
+}
+#main-board .sentence-item .fa-star {
+    position: absolute;
+    margin-left: -25px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+#main-board .sentence-item .fa-star:hover, #main-board .sentence-item .fa-star.active {
+    color: firebrick;
+}
+
+.view-hide{
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+/*modal stuff*/
+.modal-content{
+    padding: 50px;
+}
+

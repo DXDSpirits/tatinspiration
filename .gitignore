@@ -1,0 +1,8 @@
+*.pyc
+.webassets-cache
+dist/
+local_conf.py
+*.nja
+main_bundle.js
+env
+.DS_Store
