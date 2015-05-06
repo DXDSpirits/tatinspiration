@@ -1,5 +1,8 @@
 ﻿require.config({
     baseUrl: 'static/',
+    shim : {
+        "bootstrap" : { "deps" :['jquery'] }
+    },
     paths: {
         jquery: 'libs/jquery',
         underscore: 'libs/underscore', 
