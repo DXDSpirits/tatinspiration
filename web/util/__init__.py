@@ -8,6 +8,8 @@ from whoosh.filedb.filestore import FileStorage
 from redis import Redis
 from rq import Queue
 
+from .whoose_redis_storage import RedisStore
+_redis = Redis()
 #http://flask.pocoo.org/docs/patterns/viewdecorators/
 def login_required(f):
     from web.model import User
@@ -37,23 +39,20 @@ def _get_whoosh_ix():
 
     import web.config.conf
     ix = {}
-
     def _(schemaName, schema):
+        storage = RedisStore(_redis, schemaName)
         if ix.get(schemaName) is None:
             # we index per model.
-            wi = os.path.join(web.config.conf.WHOOSH_BASE, schemaName)
-            if whoosh.index.exists_in(wi):
-                ix[schemaName] = whoosh.index.open_dir(wi)
+            if storage.file_exists(schemaName):
+                ix[schemaName] = storage.open_index()
             else:
-                if not os.path.exists(wi):
-                    os.makedirs(wi)
-                ix[schemaName] = whoosh.index.create_in(wi, schema)
+                ix[schemaName] = storage.create_index(schema)
         return ix.get(schemaName)
 
     return _
 
-get_whoosh_ix = _get_whoosh_ix()
 
-q = Queue(connection=Redis())
+q = Queue(connection=_redis)
+get_whoosh_ix = _get_whoosh_ix()
 
 
