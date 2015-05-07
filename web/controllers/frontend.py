@@ -5,7 +5,7 @@ from whoosh import qparser
 
 from web.app import app, auth
 from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
-from web.util import get_whoosh_ix
+from web.util import get_whoosh_ix, q
 
 @app.route('/')
 def main():
@@ -39,9 +39,9 @@ def write_inspiration():
         content = request.form.get("content") 
 
         ## make inspiration
-        inspiration = Inspiration.create(author=user, content=content)
+        inspiration = Inspiration.create(author=user.id, content=content)
         ## we can defer this by using message-queue
-        inspiration.make_keyword_index()
+        q.enqueue(inspiration.make_keyword_index)
 
         ## make labels
         label_str = request.form.get("labels")

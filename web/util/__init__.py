@@ -5,6 +5,8 @@ from functools import wraps
 from flask import session, request, redirect, url_for
 import whoosh.index
 from whoosh.filedb.filestore import FileStorage
+from redis import Redis
+from rq import Queue
 
 #http://flask.pocoo.org/docs/patterns/viewdecorators/
 def login_required(f):
@@ -52,6 +54,6 @@ def _get_whoosh_ix():
 
 get_whoosh_ix = _get_whoosh_ix()
 
-
+q = Queue(connection=Redis())
 
 

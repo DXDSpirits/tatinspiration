@@ -1,7 +1,11 @@
-### This a a bootstrap for flask webapp.
+### 
 
-I also put `boostrap3` here for convience.
+make your virtualenv firstly!
 
-Everything you need for setup a flask project!
+`pip install -r pip_requirements.txt`
 
-Remember to install pip_requirements and setup virtualenv!!
+run rqworker: `python myrqworker.py`
+
+need redis installed
+
+
