@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import re
 from flask import render_template, request, redirect, flash, session
+from whoosh import qparser
 
 from web.app import app, auth
 from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
+from web.model.whoose_schema import InspirationSchema
+from web.util import get_whoosh_ix
 
 @app.route('/')
 def main():
@@ -54,15 +57,22 @@ def write_inspiration():
 
 @app.route('/search')
 def search():
+    ix = get_whoosh_ix("inspiration", InspirationSchema)
     keyword = request.args.get("keyword")
     ### do not consider splitting keyword firstly
 
-    print "keyword: %s"%keyword
-    ii_list = InspirationIndex.select().where(InspirationIndex.keyword==keyword)
-    print "ii_list: %s"%len(list(ii_list))
-    inspiration_list = [ ii.inspiration for ii in ii_list]
-    print "inspiration_list: %s"%len(inspiration_list)
-    return render_template("search.html",inspiration_list=inspiration_list)
+
+    with ix.searcher() as searcher:
+        parser = qparser.QueryParser("content", schema=ix.schema, group=qparser.OrGroup)
+        search_expression = parser.parse(keyword)
+
+        print "search_expression: %s"%search_expression
+
+        results = searcher.search(search_expression)
+
+        inspiration_list = [ Inspiration.select().where(Inspiration.id==r["inspiration_id"]).get() \
+                                     for r in results]
+        return render_template("search.html",inspiration_list=inspiration_list)
 
 
 
