@@ -23,7 +23,7 @@ class Inspiration(db.Model):
     def make_keyword_index(self):
         ix = get_whoosh_ix("inspiration", InspirationSchema)
         writer = ix.writer()
-        writer.add_document(content=self.content, id=self.id)
+        writer.add_document(content=self.content, inspiration_id=unicode(self.id))
         writer.commit()
 
 

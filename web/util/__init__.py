@@ -33,13 +33,13 @@ def _get_whoosh_ix():
     # refer to flask-whooshalchemy
     # use FileStorage
 
-    import config.conf
+    import web.config.conf
     ix = {}
 
     def _(schemaName, schema):
         if ix.get(schemaName) is None:
             # we index per model.
-            wi = os.path.join(config.conf['WHOOSH_BASE'], schemaName)
+            wi = os.path.join(web.config.conf.WHOOSH_BASE, schemaName)
             if whoosh.index.exists_in(wi):
                 ix[schemaName] = whoosh.index.open_dir(wi)
             else:
