@@ -21,6 +21,7 @@ from whoosh.index import _DEF_INDEX_NAME
 from whoosh.filedb.structfile import StructFile
 from whoosh.filedb.filestore import Storage
 from whoosh.util import random_name
+from whoosh.index import TOC, FileIndex, _DEF_INDEX_NAME
 
 class RedisStore(Storage):
     """Storage object that keeps the index in redis.
@@ -35,8 +36,12 @@ class RedisStore(Storage):
         self.redis = redis
         self.locks = {}
 
-    # def create_index(self, schema, indexname=_DEF_INDEX_NAME):
-    #     return create_index(self, schema, indexname)
+    def create_index(self, schema, indexname=_DEF_INDEX_NAME):
+        if self.readonly:
+            raise ReadOnlyError
+
+        # TOC.create(self, schema, indexname)
+        return FileIndex(self, schema, indexname)
 
     def file_modified(self, name):
         return -1
@@ -85,7 +90,7 @@ class RedisStore(Storage):
         return f
 
     def open_file(self, name, *args, **kwargs):
-        print "open file : %s" % name
+        print "open file : %s ==> %s" % (self.folder, name)
         if not self.file_exists(name):
             raise NameError("No such file %r" % name)
         def onclose_fn(sfile):
