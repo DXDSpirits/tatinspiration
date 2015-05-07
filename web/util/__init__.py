@@ -1,9 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
-
+import os
 from functools import wraps
 
 from flask import session, request, redirect, url_for
-
+import whoosh.index
+from whoosh.filedb.filestore import FileStorage
 
 #http://flask.pocoo.org/docs/patterns/viewdecorators/
 def login_required(f):
@@ -27,5 +28,30 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+def _get_whoosh_ix():
+    # refer to flask-whooshalchemy
+    # use FileStorage
+
+    import config.conf
+    ix = {}
+
+    def _(schemaName, schema):
+        if ix.get(schemaName) is None:
+            # we index per model.
+            wi = os.path.join(config.conf['WHOOSH_BASE'], schemaName)
+            if whoosh.index.exists_in(wi):
+                ix[schemaName] = whoosh.index.open_dir(wi)
+            else:
+                if not os.path.exists(wi):
+                    os.makedirs(wi)
+                ix[schemaName] = whoosh.index.create_in(wi, schema)
+        return ix.get(schemaName)
+
+    return _
+
+get_whoosh_ix = _get_whoosh_ix()
+
+
 
 

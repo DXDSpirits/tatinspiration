@@ -12,6 +12,7 @@ SITE_DOMAIN         = ""#your site here
 PORT                = "5000"
 SECRET_KEY          = "secret_keyplzchangeit"
 
+WHOOSH_BASE         = "/Users/yang/whoosh"
 
 try:
     from local_conf import *
