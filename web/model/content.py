@@ -10,7 +10,6 @@ import jieba
 
 from web.app import db, auth
 from web.util import get_whoosh_ix
-from .whoose_schema import InspirationSchema
 
 class Label(db.Model):
     name        = CharField(unique=True)
@@ -21,6 +20,7 @@ class Inspiration(db.Model):
     content     = TextField()
 
     def make_keyword_index(self):
+        from .whoose_schema import InspirationSchema
         ix = get_whoosh_ix("inspiration", InspirationSchema)
         writer = ix.writer()
         writer.add_document(content=self.content, inspiration_id=unicode(self.id))

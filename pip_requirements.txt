@@ -3,10 +3,12 @@ Fabric==1.8.0
 Flask==0.10.1
 Flask-Admin==1.0.7
 Flask-Assets==0.8
+Flask-Failsafe==0.2
 flask-peewee==0.6.6
 Flask-Script==0.6.6
 Flask-WTF==0.9.4
 itsdangerous==0.23
+jieba==0.36.2
 Jinja2==2.7.1
 MarkupSafe==0.18
 MySQL-python==1.2.5
@@ -15,5 +17,6 @@ peewee==2.6.0
 pycrypto==2.6.1
 webassets==0.8
 Werkzeug==0.9.4
+Whoosh==2.7.0
 wtf-peewee==0.2.3
 WTForms==1.0.5

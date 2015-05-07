@@ -5,7 +5,6 @@ from whoosh import qparser
 
 from web.app import app, auth
 from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
-from web.model.whoose_schema import InspirationSchema
 from web.util import get_whoosh_ix
 
 @app.route('/')
@@ -57,6 +56,7 @@ def write_inspiration():
 
 @app.route('/search')
 def search():
+    from web.model.whoose_schema import InspirationSchema
     ix = get_whoosh_ix("inspiration", InspirationSchema)
     keyword = request.args.get("keyword")
     ### do not consider splitting keyword firstly
