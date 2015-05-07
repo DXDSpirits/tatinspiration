@@ -9,7 +9,8 @@ import jieba
 
 
 from web.app import db, auth
-
+from web.util import get_whoosh_ix
+from .whoose_schema import InspirationSchema
 
 class Label(db.Model):
     name        = CharField(unique=True)
@@ -20,12 +21,10 @@ class Inspiration(db.Model):
     content     = TextField()
 
     def make_keyword_index(self):
-        keyword_list = jieba.cut_for_search(self.content)
-        for keyword in keyword_list:
-            ii, created = InspirationIndex.get_or_create(keyword=keyword, inspiration=self)
-            if not created:
-                ii.count += 1
-                ii.save()
+        ix = get_whoosh_ix("inspiration", InspirationSchema)
+        writer = ix.writer()
+        writer.add_document(content=self.content, id=self.id)
+        writer.commit()
 
 
 class LabelInspirationRelationShip(db.Model):
