@@ -26,6 +26,13 @@ class Inspiration(db.Model):
         writer.add_document(content=self.content, inspiration_id=unicode(self.id))
         writer.commit()
 
+    def remake_keyword_index(self):
+        from .whoose_schema import InspirationSchema
+        ix = get_whoosh_ix("inspiration", InspirationSchema)
+        writer = ix.writer()
+        writer.update_document(content=self.content, inspiration_id=unicode(self.id))
+        writer.commit()
+
     @classmethod
     def post(cls, inpiration_kwg=None, label_list=None):
         inpiration_kwg = inpiration_kwg or {}
@@ -37,6 +44,15 @@ class Inspiration(db.Model):
             label.save()
         return inspiration
 
+    def modify(self, content="", label_list=None):
+        self.content = content
+        label_list = label_list or []
+        for label in label_list:
+            _, created = LabelInspirationRelationShip.get_or_create(inspiration=inspiration, label=label)
+            if created:
+                label.count += 1
+                label.save()
+        self.save()
 
 
 
@@ -45,17 +61,6 @@ class LabelInspirationRelationShip(db.Model):
     label       = ForeignKeyField(Label)
     class Meta:
         primary_key = CompositeKey('inspiration', 'label')
-
-
-class InspirationIndex(db.Model):
-    keyword     = CharField()
-    inspiration = ForeignKeyField(Inspiration)
-    count       = IntegerField(default=1)
-    class Meta:
-        primary_key = CompositeKey('keyword', 'inspiration')
-
-    def __str__(self):
-        return "[%s]: <Inspiration: %s>  ==> %s" %(self.keyword, self.inspiration.id, self.count) 
 
 
 

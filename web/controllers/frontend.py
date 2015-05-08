@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, flash, session
 from whoosh import qparser
 
 from web.app import app, auth
-from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
+from web.model import Label, Inspiration, LabelInspirationRelationShip
 from web.util import get_whoosh_ix, q
 
 @app.route('/')
@@ -41,8 +41,6 @@ def write_inspiration():
         user = auth.get_logged_in_user()
         content = request.form.get("content") 
 
-        
-
         ## make labels
         label_name_set = set(filter(lambda s: len(s.strip()) > 0, request.values.getlist("labels")))
         label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_set]
@@ -53,6 +51,8 @@ def write_inspiration():
         ## make rs
         
         return redirect("/")
+
+
 
 @app.route('/search')
 def search():

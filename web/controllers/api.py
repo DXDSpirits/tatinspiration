@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_peewee.rest import RestAPI, RestResource, UserAuthentication
 from web.app import app, auth
-from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
+from web.model import Label, Inspiration, LabelInspirationRelationShip
 
 
 user_auth = UserAuthentication(auth)
@@ -14,7 +14,7 @@ class LabelInspirationRelationShipResource(RestResource):
 api.register(LabelInspirationRelationShip, LabelInspirationRelationShipResource)
 
 # setup user
-register_class = [Label, Inspiration, auth.User, InspirationIndex]
+register_class = [Label, Inspiration, auth.User]
 for klass in register_class:
     api.register(klass)
 

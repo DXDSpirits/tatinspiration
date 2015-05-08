@@ -13,8 +13,8 @@ if(__name__ == "__main__"):
     from web.app import auth
     app.debug = app.config["DEBUG_MODE"]
     # move this to script 
-    from web.model import Label, Inspiration, LabelInspirationRelationShip, InspirationIndex
-    init_class = [auth.User, Label, Inspiration, LabelInspirationRelationShip, InspirationIndex]
+    from web.model import Label, Inspiration, LabelInspirationRelationShip
+    init_class = [auth.User, Label, Inspiration, LabelInspirationRelationShip]
 
     for kls in init_class:
         kls.create_table(fail_silently=True)
