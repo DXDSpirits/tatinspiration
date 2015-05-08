@@ -44,9 +44,7 @@ def write_inspiration():
         q.enqueue(inspiration.make_keyword_index)
 
         ## make labels
-        label_str = request.form.get("labels")
-        #### use set to avoid duplicate name
-        label_name_set = set(re.split(r"\W+", label_str))
+        label_name_set = set(filter(lambda s: len(s.strip()) > 0, request.values.getlist("labels")))
         label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_set]
 
         ## make rs
