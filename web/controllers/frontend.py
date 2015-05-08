@@ -76,14 +76,6 @@ def search():
                                      for r in results]
         return render_template("search.html",inspiration_list=inspiration_list)
 
-@app.route("/get-inpiration-by-label-id", methods=["POST"])
-def get_inspiration_by_label_id():
-    label_id = request.form.get("label_id") or None
-    if label_id is None:
-        inspiration_list = Inspiration.select().order_by(Inspiration.id.desc()).limit(20)
-
-    ## reconsider
-    pass
 
 
 

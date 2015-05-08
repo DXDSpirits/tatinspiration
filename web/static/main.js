@@ -26,7 +26,7 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         tokenSeparators: [',', ' ']
     });
 
-
+    var inpirationListItemTemplate = _.template($("#inpiration-list-item-template").html())
 
     var router = new (Backbone.Router.extend({
         routes: {
@@ -34,7 +34,19 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         },
 
         labelFilter: function(labelId){
-            console.log("labelId:" + labelId)
+            $.get("/api/labelinspirationrelationship/?label="+labelId)
+             .done(function(data){
+                console.log(data)
+                var $sentenceContainer = $('.sentence-container');
+                $sentenceContainer.html("");
+                _.each(data.objects,function(obj){
+                    var htmlContent = inpirationListItemTemplate(obj);
+                    console.log(htmlContent);
+                    $sentenceContainer.append(htmlContent)
+                })
+
+             });
+
         },
 
 

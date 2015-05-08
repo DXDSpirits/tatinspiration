@@ -14,7 +14,7 @@
         <div class="sentence-container">
         {%for inspiration in inspiration_list%}
             <div class="sentence-item">
-                <div>{{inspiration.content}}</div>
+                <div class="content">{{inspiration.content}}</div>
             </div>
         {%endfor%}
 
@@ -24,3 +24,14 @@
 
 
 {%endblock%}
+
+
+
+
+{%block extra%}
+{%include "view-template/inspiration-list-item.html"%}
+{%endblock%}
+
+
+
+
