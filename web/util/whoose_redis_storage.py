@@ -40,7 +40,7 @@ class RedisStore(Storage):
         if self.readonly:
             raise ReadOnlyError
 
-        # TOC.create(self, schema, indexname)
+        TOC.create(self, schema, indexname)
         return FileIndex(self, schema, indexname)
 
     def file_modified(self, name):

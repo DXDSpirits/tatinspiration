@@ -52,6 +52,13 @@ def write_inspiration():
         
         return redirect("/")
 
+@app.route('/inpiration/<int:inpiration_id>/modify', methods=["GET", "POST"])
+@auth.login_required
+def modify_inspiration():
+    if request.method == "GET":
+        labels = Label.select()
+
+        return render_template("modify.html", labels=labels)
 
 
 @app.route('/search')

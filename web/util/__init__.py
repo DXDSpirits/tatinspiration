@@ -41,12 +41,13 @@ def _get_whoosh_ix():
     ix = {}
     def _(schemaName, schema):
         storage = RedisStore(_redis, schemaName)
+        # print "ix.get(schemaName):%s"%ix.get(schemaName)
         if ix.get(schemaName) is None:
-            # we index per model.
-
+            # print "_redis.exists(schemaName):%s"%_redis.exists(schemaName) 
             if _redis.exists(schemaName): ## problem here
                 ix[schemaName] = storage.open_index()
             else:
+                # print "create Index"
                 ix[schemaName] = storage.create_index(schema)
         return ix.get(schemaName)
 
