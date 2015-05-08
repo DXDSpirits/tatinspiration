@@ -10,7 +10,8 @@ from web.util import get_whoosh_ix, q
 @app.route('/')
 def main():
     inspiration_list = Inspiration.select().order_by(Inspiration.id.desc()).limit(20)
-    return render_template("main.html",inspiration_list=inspiration_list)
+    labels = Label.select()
+    return render_template("main.html",inspiration_list=inspiration_list, labels=labels)
 
 
 @app.route('/login', methods=["POST"])
@@ -33,7 +34,9 @@ def boring_user_login():
 @auth.login_required
 def write_inspiration():
     if request.method == "GET":
-        return render_template("write.html")
+        labels = Label.select()
+
+        return render_template("write.html", labels=labels)
     else:
         user = auth.get_logged_in_user()
         content = request.form.get("content") 

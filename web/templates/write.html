@@ -9,6 +9,10 @@
         <div class="form-group">
             <!-- <input id="label-input" class="form-control" name="labels" autocomplete="off" placeholder="labels: split by ," /> -->
              <select id="label-input" name="labels" class="form-control" multiple="multiple">
+                {%for label in labels%}
+                     <option>{{label.name}}</option>
+                {%endfor%}
+
             </select>
         </div>
         <div class="form-group">
