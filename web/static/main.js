@@ -24,7 +24,26 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         placeholder: "labels",
         tags: true,
         tokenSeparators: [',', ' ']
-    })
+    });
+
+
+
+    var router = new (Backbone.Router.extend({
+        routes: {
+            "labelFilter=:labelId": "labelFilter" // #search/kiwis/p7
+        },
+
+        labelFilter: function(labelId){
+            console.log("labelId:" + labelId)
+        },
+
+
+    }))
+
+    Backbone.history.start()
+
+
+
 
 
 });

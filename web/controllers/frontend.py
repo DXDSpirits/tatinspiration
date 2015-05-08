@@ -10,7 +10,7 @@ from web.util import get_whoosh_ix, q
 @app.route('/')
 def main():
     inspiration_list = Inspiration.select().order_by(Inspiration.id.desc()).limit(20)
-    labels = Label.select()
+    labels = Label.select().order_by(Label.count.desc())
     return render_template("main.html",inspiration_list=inspiration_list, labels=labels)
 
 
@@ -41,18 +41,17 @@ def write_inspiration():
         user = auth.get_logged_in_user()
         content = request.form.get("content") 
 
-        ## make inspiration
-        inspiration = Inspiration.create(author=user.id, content=content)
-        ## we can defer this by using message-queue
-        q.enqueue(inspiration.make_keyword_index)
+        
 
         ## make labels
         label_name_set = set(filter(lambda s: len(s.strip()) > 0, request.values.getlist("labels")))
         label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_set]
-
+        ## make inspiration
+        inspiration = Inspiration.post(inpiration_kwg={"author":user.id, "content":content}, label_list=label_list)
+        ## we can defer this by using message-queue
+        q.enqueue(inspiration.make_keyword_index)
         ## make rs
-        for label in label_list:
-            LabelInspirationRelationShip.get_or_create(inspiration=inspiration, label=label)
+        
         return redirect("/")
 
 @app.route('/search')
@@ -77,8 +76,14 @@ def search():
                                      for r in results]
         return render_template("search.html",inspiration_list=inspiration_list)
 
+@app.route("/get-inpiration-by-label-id", methods=["POST"])
+def get_inspiration_by_label_id():
+    label_id = request.form.get("label_id") or None
+    if label_id is None:
+        inspiration_list = Inspiration.select().order_by(Inspiration.id.desc()).limit(20)
 
-
+    ## reconsider
+    pass
 
 
 

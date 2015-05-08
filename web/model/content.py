@@ -26,6 +26,19 @@ class Inspiration(db.Model):
         writer.add_document(content=self.content, inspiration_id=unicode(self.id))
         writer.commit()
 
+    @classmethod
+    def post(cls, inpiration_kwg=None, label_list=None):
+        inpiration_kwg = inpiration_kwg or {}
+        label_list = label_list or []
+        inspiration = Inspiration.create(**inpiration_kwg)
+        for label in label_list:
+            LabelInspirationRelationShip.get_or_create(inspiration=inspiration, label=label)
+            label.count += 1
+            label.save()
+        return inspiration
+
+
+
 
 class LabelInspirationRelationShip(db.Model):
     inspiration = ForeignKeyField(Inspiration)
