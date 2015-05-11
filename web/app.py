@@ -12,9 +12,10 @@ app = Flask(__name__)
 app.config.from_object("web.config.conf")
 
 ### config log
-handler = logging.FileHandler('search.log')
-handler.setLevel(logging.INFO)
-app.logger.addHandler(handler)
+@app.before_first_request
+def setup_logging():
+    app.logger.addHandler(logging.StreamHandler())
+    app.logger.setLevel(logging.INFO)
 
 db = Database(app)
 # needed for authentication
