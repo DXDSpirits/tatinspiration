@@ -81,6 +81,7 @@ def search():
     ### do not consider splitting keyword firstly
 
 
+
     with ix.searcher() as searcher:
         parser = qparser.QueryParser("content", schema=ix.schema, group=qparser.OrGroup)
         search_expression = parser.parse(keyword)
@@ -93,6 +94,7 @@ def search():
 
         inspiration_list = [ Inspiration.select().where(Inspiration.id==r["inspiration_id"]).get() \
                                      for r in results]
+        app.logger.info("keyword:%s ==> %d result(s) found", keyword, len(inspiration_list))
         return render_template("search.html",inspiration_list=inspiration_list)
 
 

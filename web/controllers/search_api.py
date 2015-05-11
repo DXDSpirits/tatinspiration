@@ -35,6 +35,9 @@ def inspiration_search():
 
         result_list += [ Inspiration.select().where(Inspiration.id==r["inspiration_id"]).get() \
                                      for r in results]
+
+    app.logger.info("keyword:%s ==> %d result(s) found", query, len(result_list))
+
     return jsonify({
                     "meta": {
                         "model": "inspiration",

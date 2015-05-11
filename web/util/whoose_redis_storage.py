@@ -93,7 +93,7 @@ class RedisStore(Storage):
         return f
 
     def open_file(self, name, *args, **kwargs):
-        print "open file : %s ==> %s" % (self.folder, name)
+        # print "open file : %s ==> %s" % (self.folder, name)
         if not self.file_exists(name):
             raise NameError("No such file %r" % name)
         def onclose_fn(sfile):
