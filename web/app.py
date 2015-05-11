@@ -14,7 +14,7 @@ app.config.from_object("web.config.conf")
 ### config log
 @app.before_first_request
 def setup_logging():
-    app.logger.addHandler(logging.StreamHandler())
+    app.logger.addHandler(logging.FileHandler('search.log'))
     app.logger.setLevel(logging.INFO)
 
 db = Database(app)
