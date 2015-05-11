@@ -58,6 +58,9 @@ class RedisStore(Storage):
     def total_size(self):
         return sum(self.file_length(f) for f in self.list())
 
+    def folder_exists(self, name):
+        return self.redis.exists("RedisStore:%s" % self.folder)
+
     def file_exists(self, name):
         return self.redis.hexists("RedisStore:%s" % self.folder, name)
 

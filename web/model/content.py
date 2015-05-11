@@ -63,6 +63,12 @@ class Inspiration(db.Model):
                 label.save()
         self.save()
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+        }
+
 
 
 class LabelInspirationRelationShip(db.Model):

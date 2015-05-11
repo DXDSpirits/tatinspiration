@@ -85,16 +85,15 @@ def search():
         parser = qparser.QueryParser("content", schema=ix.schema, group=qparser.OrGroup)
         search_expression = parser.parse(keyword)
 
-        print "search_expression: %s"%search_expression
+        # print "search_expression: %s"%search_expression
 
         results = searcher.search(search_expression)
 
-        print "results: %s"%results
+        # print "results: %s"%results
 
         inspiration_list = [ Inspiration.select().where(Inspiration.id==r["inspiration_id"]).get() \
                                      for r in results]
         return render_template("search.html",inspiration_list=inspiration_list)
-
 
 
 

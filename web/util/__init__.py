@@ -44,7 +44,7 @@ def _get_whoosh_ix():
         # print "ix.get(schemaName):%s"%ix.get(schemaName)
         if ix.get(schemaName) is None:
             # print "_redis.exists(schemaName):%s"%_redis.exists(schemaName) 
-            if _redis.exists(schemaName): ## problem here
+            if storage.folder_exists(schemaName): ## problem here
                 ix[schemaName] = storage.open_index()
             else:
                 # print "create Index"
