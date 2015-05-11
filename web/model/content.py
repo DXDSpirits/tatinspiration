@@ -47,8 +47,17 @@ class Inspiration(db.Model):
     def modify(self, content="", label_list=None):
         self.content = content
         label_list = label_list or []
+
+        old_label_RS_list = LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
+                                            .where(LabelInspirationRelationShip.inspiration==self.id)
+        for rs in old_label_RS_list:
+            if rs.label not in label_list:
+                rs.label.count -= 1;
+                rs.label.save()
+                rs.delete()
+
         for label in label_list:
-            _, created = LabelInspirationRelationShip.get_or_create(inspiration=inspiration, label=label)
+            _, created = LabelInspirationRelationShip.get_or_create(inspiration=self, label=label)
             if created:
                 label.count += 1
                 label.save()

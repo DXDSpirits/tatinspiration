@@ -1,6 +1,10 @@
 .navbar-brand {
     padding-left: 0px;
 }
+#alert-bar{
+    margin-top: -21px;
+}
+
 #rightbar {
     width: 240px;
     border-right: 1px solid whitesmoke;

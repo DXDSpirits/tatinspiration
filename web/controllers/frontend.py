@@ -49,20 +49,28 @@ def write_inspiration():
         ## we can defer this by using message-queue
         q.enqueue(inspiration.make_keyword_index)
         ## make rs
-        
+        flash("make inspiration successfully")
         return redirect("/")
 
 @app.route('/inspiration/<int:inspiration_id>/modify', methods=["GET", "POST"])
 @auth.login_required
 def modify_inspiration(inspiration_id):
+    inspiration = Inspiration.select().where(Inspiration.id==inspiration_id).get()
     if request.method == "GET":
         labels = Label.select()
-        inspiration = Inspiration.select().where(Inspiration.id==inspiration_id).get()
         inspiration.labels = [rs.label for rs in LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
                                             .where(LabelInspirationRelationShip.inspiration==inspiration.id)]
         return render_template("modify.html", 
                                labels=labels,
                                inspiration=inspiration)
+    else:
+        content = request.form.get("content")
+        label_name_set = set(filter(lambda s: len(s.strip()) > 0, request.values.getlist("labels")))
+        label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_set]
+        inspiration.modify(content=content, label_list=label_list)
+        q.enqueue(inspiration.remake_keyword_index)
+        flash("modify inspiration successfully")
+        return redirect("/")
 
 
 @app.route('/search')
