@@ -52,13 +52,17 @@ def write_inspiration():
         
         return redirect("/")
 
-@app.route('/inpiration/<int:inpiration_id>/modify', methods=["GET", "POST"])
+@app.route('/inspiration/<int:inspiration_id>/modify', methods=["GET", "POST"])
 @auth.login_required
-def modify_inspiration():
+def modify_inspiration(inspiration_id):
     if request.method == "GET":
         labels = Label.select()
-
-        return render_template("modify.html", labels=labels)
+        inspiration = Inspiration.select().where(Inspiration.id==inspiration_id).get()
+        inspiration.labels = [rs.label for rs in LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
+                                            .where(LabelInspirationRelationShip.inspiration==inspiration.id)]
+        return render_template("modify.html", 
+                               labels=labels,
+                               inspiration=inspiration)
 
 
 @app.route('/search')

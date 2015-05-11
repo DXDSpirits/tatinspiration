@@ -14,7 +14,7 @@
         <div class="sentence-container">
         {%for inspiration in inspiration_list%}
             <div class="sentence-item">
-                <div class="content">{{inspiration.content}}</div>
+                <a href="/inspiration/{{inspiration.id}}/modify" class="content">{{inspiration.content}}</a>
             </div>
         {%endfor%}
 

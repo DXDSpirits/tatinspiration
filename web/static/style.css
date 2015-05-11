@@ -30,6 +30,15 @@
     padding: 20px;
     border-bottom: 1px solid whitesmoke;
 }
+
+#main-board .sentence-item .content{
+    color: black;
+}
+#main-board .sentence-item .content:hover{
+    color: black;
+    text-decoration: none;
+}
+
 #main-board .sentence-item .fa-star {
     position: absolute;
     margin-left: -25px;

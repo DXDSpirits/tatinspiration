@@ -1,5 +1,5 @@
 ﻿require.config({
-    baseUrl: 'static/',
+    baseUrl: '/static/',
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         // "jquery-cookie"  : ["jquery"]
