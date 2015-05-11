@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask
 from flask.ext.assets import Environment, Bundle
@@ -9,6 +10,12 @@ import config.conf as conf
 app = Flask(__name__)
 
 app.config.from_object("web.config.conf")
+
+### config log
+handler = logging.FileHandler('search.log')
+handler.setLevel(logging.INFO)
+app.logger.addHandler(handler)
+
 db = Database(app)
 # needed for authentication
 auth = Auth(app, db)

@@ -1,3 +1,4 @@
+*.log
 *.pyc
 .webassets-cache
 dist/
