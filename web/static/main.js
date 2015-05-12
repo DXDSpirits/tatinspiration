@@ -67,7 +67,13 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
     }))
 
 
-    $("#search-btn").on("click", function(e){
+    $(document).on("click", "#search-btn", function(e){
+        var keyword = $("#keyword-input").val();
+        router.navigate("search="+keyword, {trigger: true});
+    })
+
+    $(document).on("submit", "#search-form", function(e){
+        e.preventDefault();
         var keyword = $("#keyword-input").val();
         router.navigate("search="+keyword, {trigger: true});
     })
