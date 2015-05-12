@@ -25,14 +25,20 @@
     max-width: 480px;
     margin: 0 auto;
 }
+#main-board a.content:hover{
+    text-decoration: none;
+}
 
-#main-board .sentence-item:first-child{
+#main-board .content:first-child .sentence-item{
     padding-top: 0px;
 }
 
 #main-board .sentence-item {
     padding: 20px;
-    border-bottom: 1px solid whitesmoke;
+    background-color: white;
+    border: none;
+    border-bottom: 1px solid #cccccc;
+    text-align: left;
 }
 
 #main-board .sentence-item .content{

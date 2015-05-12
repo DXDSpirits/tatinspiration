@@ -39,7 +39,11 @@ def write_inspiration():
         return render_template("write.html", labels=labels)
     else:
         user = auth.get_logged_in_user()
-        content = request.form.get("content") 
+        content = request.form.get("content", "").strip()
+        if len(content) < 5:
+            flash("no enough words in content area")
+            return redirect("/write")
+        
 
         ## make labels
         label_name_set = set(filter(lambda s: len(s.strip()) > 0, request.values.getlist("labels")))

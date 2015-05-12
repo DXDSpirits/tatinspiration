@@ -13,9 +13,9 @@
     <div id="main-board" class="col-md-6">
         <div class="sentence-container">
         {%for inspiration in inspiration_list%}
-            <div class="sentence-item">
-                <a href="/inspiration/{{inspiration.id}}/modify" class="content">{{inspiration.content}}</a>
-            </div>
+        <a href="/inspiration/{{inspiration.id}}/modify" class="content">
+            <pre class="sentence-item">{{inspiration.content}}</pre>
+        </a>
         {%endfor%}
 
 
