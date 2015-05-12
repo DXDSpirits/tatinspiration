@@ -77,31 +77,6 @@ def modify_inspiration(inspiration_id):
         return redirect("/")
 
 
-@app.route('/search')
-def search():
-    from web.model.whoose_schema import InspirationSchema
-    ix = get_whoosh_ix("inspiration", InspirationSchema)
-    keyword = request.args.get("keyword")
-    ### do not consider splitting keyword firstly
-
-
-
-    with ix.searcher() as searcher:
-        parser = qparser.QueryParser("content", schema=ix.schema, group=qparser.OrGroup)
-        search_expression = parser.parse(keyword)
-
-        # print "search_expression: %s"%search_expression
-
-        results = searcher.search(search_expression)
-
-        # print "results: %s"%results
-
-        inspiration_list = [ Inspiration.select().where(Inspiration.id==r["inspiration_id"]).get() \
-                                     for r in results]
-        app.logger.info("keyword:%s ==> %d result(s) found", keyword, len(inspiration_list))
-        return render_template("search.html",inspiration_list=inspiration_list)
-
-
 
 
 

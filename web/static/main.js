@@ -30,7 +30,8 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
 
     var router = new (Backbone.Router.extend({
         routes: {
-            "labelFilter=:labelId": "labelFilter" // #search/kiwis/p7
+            "labelFilter=:labelId": "labelFilter", // #search/kiwis/p7
+            "search=:keyword": "search"
         },
 
         labelFilter: function(labelId){
@@ -46,11 +47,30 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
                 })
 
              });
-
         },
 
+        search: function(keyword){
+            $.get("/api/inspiration/search?q="+keyword)
+             .done(function(data){
+                console.log(data)
+                var $sentenceContainer = $('.sentence-container');
+                $sentenceContainer.html("");
+                _.each(data.objects,function(obj){
+                    var htmlContent = inpirationListItemTemplate({inspiration: obj});
+                    console.log(htmlContent);
+                    $sentenceContainer.append(htmlContent)
+                })
+
+             });
+        },
 
     }))
+
+
+    $("#search-btn").on("click", function(e){
+        var keyword = $("#keyword-input").val();
+        router.navigate("search="+keyword, {trigger: true});
+    })
 
     Backbone.history.start()
 
