@@ -30,11 +30,9 @@ class Inspiration(db.Model):
 
     def make_keyword_index(self, label_list=None):
         from .whoose_schema import InspirationSchema
-        # print u"start make_keyword_index"
         ix = get_whoosh_ix("inspiration", InspirationSchema)
         writer = ix.writer()
         label_list = label_list or self.labels
-        # print u"label_list:%s"%label_list
         labels = u",".join([l.name for l in label_list])
         writer.add_document(content=self.content, inspiration_id=unicode(self.id), labels=labels)
         writer.commit()
@@ -83,7 +81,7 @@ class Inspiration(db.Model):
     def labels(self):
         rs_list = LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
                                             .where(LabelInspirationRelationShip.inspiration==self.id)
-        return [rs.label for rs in rs_list]
+        return set([rs.label for rs in rs_list])
 
     def to_json(self):
         return {
