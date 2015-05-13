@@ -13,7 +13,7 @@
     <div id="main-board" class="col-md-6">
         <div class="sentence-container">
             {%for inspiration in inspiration_list%}
-            <div href="/inspiration/{{inspiration.id}}/modify" class="content clearfix">
+            <div data-inspiration-id={{inspiration.id}} class="content clearfix">
                 <a href="/inspiration/{{inspiration.id}}/modify"><pre class="sentence-item">{{inspiration.content}}</pre></a>
                 <span class="label-container">
                     {%for label in inspiration.labels%}

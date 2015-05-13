@@ -18,6 +18,12 @@ class Label(db.Model):
     def __hash__(self):
         return hash(self.name)
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
 class Inspiration(db.Model):
     author      = ForeignKeyField(auth.User)
     content     = TextField()

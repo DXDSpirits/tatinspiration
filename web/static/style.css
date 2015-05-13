@@ -38,7 +38,7 @@
     text-decoration: none;
 }
 
-#main-board .content:first-child .sentence-item{
+#main-board .content:first-child{
     padding-top: 0px;
 }
 
