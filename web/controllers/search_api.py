@@ -28,7 +28,7 @@ def inspiration_search():
     with ix.searcher() as searcher:
         parser = qparser.MultifieldParser(["labels" ,"content"], schema=ix.schema, group=qparser.OrGroup)
         search_expression = parser.parse(query)
-        print "search_expression: %s"%search_expression
+        # print "search_expression: %s"%search_expression
 
         results = searcher.search(search_expression)
 

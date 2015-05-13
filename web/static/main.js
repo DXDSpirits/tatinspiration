@@ -30,8 +30,19 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
 
     var router = new (Backbone.Router.extend({
         routes: {
+            "": "index",
             "labelFilter=:labelId": "labelFilter", // #search/kiwis/p7
             "search=:keyword": "search"
+        },
+
+        index: function(){
+            // infinite scroll
+            var throttle = _.throttle(function() {
+                if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
+                    Backbone.trigger('next-page');
+                }
+            }, 200);
+            $(window).scroll(throttle);
         },
 
         labelFilter: function(labelId){
@@ -115,13 +126,6 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
 
     })
 
-    // infinite scroll
-    var throttle = _.throttle(function() {
-        if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
-            Backbone.trigger('next-page');
-        }
-    }, 200);
-    $(window).scroll(throttle);
 
     Backbone.history.start()
 
