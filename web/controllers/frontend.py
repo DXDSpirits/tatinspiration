@@ -51,7 +51,7 @@ def write_inspiration():
         ## make inspiration
         inspiration = Inspiration.post(inpiration_kwg={"author":user.id, "content":content}, label_list=label_list)
         ## we can defer this by using message-queue
-        q.enqueue(inspiration.make_keyword_index)
+        q.enqueue(inspiration.make_keyword_index, label_list)
         ## make rs
         flash("make inspiration successfully")
         return redirect("/")
@@ -62,8 +62,6 @@ def modify_inspiration(inspiration_id):
     inspiration = Inspiration.select().where(Inspiration.id==inspiration_id).get()
     if request.method == "GET":
         labels = Label.select()
-        inspiration.labels = [rs.label for rs in LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
-                                            .where(LabelInspirationRelationShip.inspiration==inspiration.id)]
         return render_template("modify.html", 
                                labels=labels,
                                inspiration=inspiration)

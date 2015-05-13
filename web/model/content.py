@@ -19,14 +19,18 @@ class Inspiration(db.Model):
     author      = ForeignKeyField(auth.User)
     content     = TextField()
 
-    def make_keyword_index(self):
+    def make_keyword_index(self, label_list=None):
         from .whoose_schema import InspirationSchema
+        # print u"start make_keyword_index"
         ix = get_whoosh_ix("inspiration", InspirationSchema)
         writer = ix.writer()
-        writer.add_document(content=self.content, inspiration_id=unicode(self.id))
+        label_list = label_list or self.labels
+        # print u"label_list:%s"%label_list
+        labels = u",".join([l.name for l in label_list])
+        writer.add_document(content=self.content, inspiration_id=unicode(self.id), labels=labels)
         writer.commit()
 
-    def remake_keyword_index(self):
+    def remake_keyword_index(self, label_list=None):
         from .whoose_schema import InspirationSchema
         ix = get_whoosh_ix("inspiration", InspirationSchema)
         writer = ix.writer()
@@ -48,8 +52,7 @@ class Inspiration(db.Model):
         self.content = content
         label_list = label_list or []
 
-        old_label_RS_list = LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
-                                            .where(LabelInspirationRelationShip.inspiration==self.id)
+        old_label_RS_list = self.labels
         for rs in old_label_RS_list:
             if rs.label not in label_list:
                 rs.label.count -= 1;
@@ -62,6 +65,12 @@ class Inspiration(db.Model):
                 label.count += 1
                 label.save()
         self.save()
+
+    @property
+    def labels(self):
+        rs_list = LabelInspirationRelationShip.select(LabelInspirationRelationShip.label)\
+                                            .where(LabelInspirationRelationShip.inspiration==self.id)
+        return [rs.label for rs in rs_list]
 
     def to_json(self):
         return {
