@@ -8,8 +8,10 @@ from whoosh.filedb.filestore import FileStorage
 from redis import Redis
 from rq import Queue
 
+import web.config.conf
+
 from .whoose_redis_storage import RedisStore
-_redis = Redis()
+_redis = Redis(**web.config.conf.REDIS)
 #http://flask.pocoo.org/docs/patterns/viewdecorators/
 def login_required(f):
     from web.model import User
@@ -37,7 +39,6 @@ def _get_whoosh_ix():
     # refer to flask-whooshalchemy
     # use FileStorage
 
-    import web.config.conf
     ix = {}
     def _(schemaName, schema):
         storage = RedisStore(_redis, schemaName)

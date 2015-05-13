@@ -4,10 +4,11 @@ from rq import Queue, Connection, Worker
 
 # Preload libraries
 import web.app
+from web.util import _redis
 
 # Provide queue names to listen to as arguments to this script,
 # similar to rqworker
-with Connection():
+with Connection(connection=_redis):
     qs = map(Queue, sys.argv[1:]) or [Queue()]
 
     w = Worker(qs)

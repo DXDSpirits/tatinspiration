@@ -14,6 +14,18 @@ SECRET_KEY          = "secret_keyplzchangeit"
 
 WHOOSH_BASE         = "/Users/yang/whoosh"
 
+DATABASE = {
+    'name': '',
+    'engine': '',
+    'user': '',
+    'passwd': '',
+}
+
+REDIS = {
+    "host": 'localhost',
+    "port": 6379,
+}
+
 try:
     from local_conf import *
 except ImportError, e:
