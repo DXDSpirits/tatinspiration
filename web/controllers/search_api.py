@@ -15,7 +15,7 @@ def inspiration_search():
     from web.model.whoose_schema import InspirationSchema
     query = request.args.get("q", "").strip()
     page = int(request.args.get("page") or 1) ## data validation
-    limit = 10
+    limit = int(request.args.get("limit") or 10)
     result_list = []
 
     ## do the search
@@ -36,13 +36,24 @@ def inspiration_search():
     app.logger.info("keyword:%s ==> %d result(s) found", query, len(result_list))
     next_page = ""
     if page*limit < len(result_list):
-        next_page = page + 1;
+        next_page = request.script_root + request.path + "?"
+        args_list = []
+        for k in request.args:
+            if "page" == k:
+                args_list.append("page=%d"%(page+1))
+            else:
+                args_list.append(k+"="+request.args[k])
+        if "page" not in request.args:
+            args_list.append("page=%d"%(page+1))
+        next_page += "&".join(args_list)
+
 
     return jsonify({
                     "meta": {
                         "total_time": time.time()-start_time,
                         "model": "inspiration",
                         "keyword": query,
+                        "next": next_page,
                     },
                     "objects": [_.to_json() for _ in result_list[page*limit-limit:page*limit]],
             })
