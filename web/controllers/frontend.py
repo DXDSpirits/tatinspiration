@@ -70,7 +70,7 @@ def modify_inspiration(inspiration_id):
         label_name_set = set(filter(lambda s: len(s.strip()) > 0, request.values.getlist("labels")))
         label_list = [Label.get_or_create(name=label_name)[0] for label_name in label_name_set]
         inspiration.modify(content=content, label_list=label_list)
-        q.enqueue(inspiration.remake_keyword_index)
+        q.enqueue(inspiration.remake_keyword_index, label_list)
         flash("modify inspiration successfully")
         return redirect("/")
 
