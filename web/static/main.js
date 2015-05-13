@@ -52,7 +52,7 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         search: function(keyword){
             $.get("/api/inspiration/search?q="+keyword)
              .done(function(data){
-                console.log(data)
+                // console.log(data)
                 var $sentenceContainer = $('.sentence-container');
                 $sentenceContainer.html("");
                 _.each(data.objects,function(obj){
@@ -77,6 +77,51 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         var keyword = $("#keyword-input").val();
         router.navigate("search="+keyword, {trigger: true});
     })
+
+    Backbone.on("next-page", function(){
+        var curTime = new Date();
+        var $loading = $(".loading-container").show();
+
+        var inspirationId = $("[data-inspiration-id]").last().data("inspiration-id");
+        if(inspirationId === 1){
+            $loading.hide()
+            return ;
+        }
+
+        function _render(data){
+            $loading.hide()
+            var $sentenceContainer = $('.sentence-container');
+            // $sentenceContainer.html("");
+            _.each(data.objects,function(obj){
+                var htmlContent = inpirationListItemTemplate({inspiration: obj});
+                // console.log(htmlContent);
+                $sentenceContainer.append(htmlContent)
+            })
+        }
+
+
+        $.get("/api/inspiration/?ordering=-id&id__lt=" + inspirationId)
+         .done(function(data){
+            var delta = (new Date()) - curTime;
+            if( delta < 350){
+                _.delay(function(){
+                    _render(data);
+                }, 800);
+            }else{
+                _render(data);
+            }
+            
+         })
+
+    })
+
+    // infinite scroll
+    var throttle = _.throttle(function() {
+        if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
+            Backbone.trigger('next-page');
+        }
+    }, 200);
+    $(window).scroll(throttle);
 
     Backbone.history.start()
 

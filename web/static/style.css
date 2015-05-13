@@ -71,7 +71,10 @@
     display: none;
 }
 
-
+.loading-container{
+    display: none;
+    margin: 20px auto;
+}
 
 
 
