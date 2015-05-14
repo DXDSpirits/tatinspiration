@@ -87,6 +87,7 @@ class Inspiration(db.Model):
         return {
             "id": self.id,
             "content": self.content,
+            "labels": [l.to_json() for l in self.labels]
         }
 
 

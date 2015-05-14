@@ -48,12 +48,12 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         labelFilter: function(labelId){
             $.get("/api/labelinspirationrelationship/?label="+labelId)
              .done(function(data){
-                console.log(data)
+                // console.log(data)
                 var $sentenceContainer = $('.sentence-container');
                 $sentenceContainer.html("");
                 _.each(data.objects,function(obj){
                     var htmlContent = inpirationListItemTemplate(obj);
-                    console.log(htmlContent);
+                    // console.log(htmlContent);
                     $sentenceContainer.append(htmlContent)
                 })
 
@@ -68,7 +68,7 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
                 $sentenceContainer.html("");
                 _.each(data.objects,function(obj){
                     var htmlContent = inpirationListItemTemplate({inspiration: obj});
-                    console.log(htmlContent);
+                    // console.log(htmlContent);
                     $sentenceContainer.append(htmlContent)
                 })
 
