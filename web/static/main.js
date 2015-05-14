@@ -14,7 +14,7 @@
     }
 });
 
-require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'], 
+require(['jquery', 'underscore', 'backbone', 'bootstrap', 'select2', 'domReady!'], 
         function($, _, Backbone) {
 
     // console.log($);
@@ -42,10 +42,12 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
                     Backbone.trigger('next-page');
                 }
             }, 200);
+            $(window).off("scroll")
             $(window).scroll(throttle);
         },
 
         labelFilter: function(labelId){
+            $(window).off("scroll")
             $.get("/api/labelinspirationrelationship/?label="+labelId)
              .done(function(data){
                 // console.log(data)
@@ -61,6 +63,7 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
         },
 
         search: function(keyword){
+            $(window).off("scroll")
             $.get("/api/inspiration/search?q="+keyword)
              .done(function(data){
                 // console.log(data)
@@ -81,12 +84,14 @@ require(['jquery', 'underscore', 'backbone', 'domReady!', 'bootstrap', 'select2'
     $(document).on("click", "#search-btn", function(e){
         var keyword = $("#keyword-input").val();
         router.navigate("search="+keyword, {trigger: true});
+        $(window).off("scroll")
     })
 
     $(document).on("submit", "#search-form", function(e){
         e.preventDefault();
         var keyword = $("#keyword-input").val();
         router.navigate("search="+keyword, {trigger: true});
+        $(window).off("scroll")
     })
 
     Backbone.on("next-page", function(){
