@@ -22,28 +22,5 @@ def update_req():
         return
     local("pip freeze|grep -v distribute > %s/pip_requirements.txt" % CURRENT_PATH)
 
-def test():
-    """Run nose test"""
-    import os
-    import sys
-    lastone = os.path.split(CURRENT_PATH)[0]
-    with lcd("unittests"):
-        local("nosetests --nocapture --with-path=%s --with-path=%s"%(lastone,CURRENT_PATH))
-    
-    
-def coverage():
-    """Run nose test with coverage"""
-    local("nosetests --with-coverage --cover-package=botan")
 
-def make_js_debug():
-    """make debug js files"""
-    target_path = os.path.join(CURRENT_PATH,"web","static")
-    with lcd(target_path):
-        local("browserify main.js -d true > main_bundle.js")
-
-def make_js():
-    """make js files"""
-    target_path = os.path.join(CURRENT_PATH,"web","static")
-    with lcd(target_path):
-        local("browserify main.js > main_bundle.js")
     

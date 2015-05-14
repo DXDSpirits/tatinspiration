@@ -4,11 +4,8 @@ from web.app import app, auth
 manager = Manager(app)
 
 @manager.command
-def hello():
-    return "hello"
-
-@manager.command
 def make_admin(username, password):
+    ''' make admin '''
     admin = auth.User(username=username, email=username, admin=True, active=True)
     admin.set_password(password)
     admin.save()
@@ -16,6 +13,7 @@ def make_admin(username, password):
 
 @manager.command
 def make_user(username, password):
+    ''' make user '''
     user = auth.User(username=username, email=username, admin=False, active=True)
     user.set_password(password)
     user.save()
