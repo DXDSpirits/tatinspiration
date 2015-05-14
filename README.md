@@ -9,3 +9,6 @@ run rqworker: `python myrqworker.py`
 need redis installed
 
 
+## manager.py usage
+
+

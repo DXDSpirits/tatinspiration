@@ -21,6 +21,26 @@ def make_user(username, password):
     user.save()
     print "cool"
 
+@manager.command
+def reindex():
+    '''this command will reindex search index'''
+    from web.model import Inspiration
+    from web.util import _redis, q
+
+    ## delete the redis key
+    _redis.delete("RedisStore:inspiration")
+
+    ##
+    for inspiration in Inspiration.select():
+        q.enqueue(inspiration.make_keyword_index, inspiration.labels)
+    print "workers are working on reindexing, type`rqinfo` to check progress"
+
 
 if __name__ == "__main__":
     manager.run()
+
+
+
+
+
+
