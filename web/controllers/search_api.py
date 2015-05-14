@@ -30,8 +30,8 @@ def inspiration_search():
         results = searcher.search(search_expression)
 
 
-        result_list = [ Inspiration.select().where(Inspiration.id==r["inspiration_id"]).get() \
-                                     for r in results]
+        result_list = filter(None, [Inspiration.select().where(Inspiration.id==r["inspiration_id"]).first() \
+                                     for r in results])
 
     app.logger.info("keyword:%s ==> %d result(s) found", query, len(result_list))
     next_page = ""
