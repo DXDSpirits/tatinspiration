@@ -27,7 +27,7 @@ def inspiration_search():
         search_expression = parser.parse(query)
         # app.logger.info("search_expression: %s", search_expression)
 
-        results = searcher.search(search_expression)
+        results = searcher.search(search_expression, limit=None)
 
 
         result_list = filter(None, [Inspiration.select().where(Inspiration.id==r["inspiration_id"]).first() \
@@ -54,6 +54,7 @@ def inspiration_search():
                         "model": "inspiration",
                         "keyword": query,
                         "next": next_page,
+                        "total_item": len(result_list)
                     },
                     "objects": [_.to_json() for _ in result_list[page*limit-limit:page*limit]],
             })
