@@ -15,6 +15,13 @@ class Label(db.Model):
     name        = CharField(unique=True)
     count       = IntegerField(default=0)
 
+
+    def recount(self):
+        LIRS = LabelInspirationRelationShip
+        self.count = LabelInspirationRelationShip.select()\
+                                                 .where(LIRS.label==self).count()
+        self.save()
+
     def __hash__(self):
         return hash(self.name)
 
