@@ -2,7 +2,7 @@
 
 {%block content%}
 
-    <div id="label-containers" class="col-md-4">
+    <div id="label-containers" class="col-md-2">
         {%for label in labels%}
             <a data-label-id="{{label.id}}" class="label label-primary" href="#labelFilter={{label.id}}">{{label.name}}({{label.count}})</a>
 
@@ -26,10 +26,19 @@
 
         <div class="text-center loading-container"><span class=" glyphicon glyphicon-refresh"></span> loading ... </div>
     </div>
+    <div id="modify-area" class="col-md-4">
+
+    </div>
+
+
 
 
 {%endblock%}
 
+{%block extra%}
+{%include "view-template/modify-board.html"%}
+
+{%endblock%}
 
 
 

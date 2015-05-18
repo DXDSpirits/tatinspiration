@@ -14,8 +14,14 @@
     }
 });
 
-require(['jquery', 'underscore', 'backbone', 'bootstrap', 'select2', 'domReady!'], 
-        function($, _, Backbone) {
+require(['model/inspiration', 
+         'view/inspiration-list-view',
+         'jquery', 'underscore', 'backbone', 
+         'bootstrap', 'select2', 'domReady!'], 
+        function(
+            Inspiration,
+            InspirationView,
+            $, _, Backbone) {
 
     // console.log($);
     // console.log(_);
@@ -26,7 +32,6 @@ require(['jquery', 'underscore', 'backbone', 'bootstrap', 'select2', 'domReady!'
         tokenSeparators: [',', ' ']
     });
 
-    var inpirationListItemTemplate = _.template($("#inpiration-list-item-template").html())
 
     var router = new (Backbone.Router.extend({
         routes: {
