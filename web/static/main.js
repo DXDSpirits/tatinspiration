@@ -32,6 +32,25 @@ require(['model/inspiration',
         tokenSeparators: [',', ' ']
     });
 
+    var Page = {};
+    Page.currentPage = null;
+    Page.labelFilter = new InspirationView({el: "#label-filter-view.sentence-container"});
+
+    Page.switchPage = function(page){
+        if(Page.currentPage === page){
+            return ;
+        }
+
+
+        if(Page.currentPage){
+            Page.currentPage.hide();
+        }
+
+        Page.currentPage = page;
+        page.show();
+
+    }
+
 
     var router = new (Backbone.Router.extend({
         routes: {
@@ -42,33 +61,27 @@ require(['model/inspiration',
 
         index: function(){
             // infinite scroll
-            var throttle = _.throttle(function() {
-                if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
-                    Backbone.trigger('next-page');
-                }
-            }, 200);
-            $(window).off("scroll")
-            $(window).scroll(throttle);
+            // var throttle = _.throttle(function() {
+            //     if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
+            //         Backbone.trigger('next-page');
+            //     }
+            // }, 200);
+            // $(window).off("scroll")
+            // $(window).scroll(throttle);
         },
 
         labelFilter: function(labelId){
-            $(window).off("scroll")
             $.get("/api/labelinspirationrelationship/?label="+labelId)
              .done(function(data){
-                // console.log(data)
-                var $sentenceContainer = $('.sentence-container');
-                $sentenceContainer.html("");
-                _.each(data.objects,function(obj){
-                    var htmlContent = inpirationListItemTemplate(obj);
-                    // console.log(htmlContent);
-                    $sentenceContainer.append(htmlContent)
-                })
-
+                var inspirationData = _.pluck(data.objects, "inspiration");
+                Page.labelFilter.clear();
+                Page.labelFilter.setCollection(inspirationData);
+                Page.labelFilter.render();
+                Page.switchPage(Page.labelFilter);
              });
         },
 
         search: function(keyword){
-            $(window).off("scroll")
             $.get("/api/inspiration/search?q="+keyword)
              .done(function(data){
                 // console.log(data)
@@ -84,7 +97,6 @@ require(['model/inspiration',
         },
 
     }))
-
 
     $(document).on("click", "#search-btn", function(e){
         var keyword = $("#keyword-input").val();

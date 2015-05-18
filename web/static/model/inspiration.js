@@ -10,8 +10,8 @@ function($, _, Backbone){
 
 
     return {
-        model: Inspiration,
-        collection: InspirationCollection
+        Model: Inspiration,
+        Collection: InspirationCollection
     };
 
 });

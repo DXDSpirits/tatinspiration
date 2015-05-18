@@ -11,20 +11,15 @@
     </div>
 
     <div id="main-board" class="col-md-6">
-        <div class="sentence-container">
-            {%for inspiration in inspiration_list%}
-            <div data-inspiration-id={{inspiration.id}} class="content clearfix">
-                <a href="/inspiration/{{inspiration.id}}/modify"><pre class="sentence-item">{{inspiration.content}}</pre></a>
-                <span class="label-container">
-                    {%for label in inspiration.labels%}
-                    <a class="label label-default" href="#labelFilter={{label.id}}">{{label.name}}</a>
-                    {%endfor%}
-                </span>
-            </div>
-            {%endfor%}
+        <div id="main-view" class="sentence-container view-hide">
+        </div>
+        <div id="label-filter-view" class="sentence-container view-hide">
+        </div>
+        <div id="search-view" class="sentence-container view-hide">
         </div>
 
-        <div class="text-center loading-container"><span class=" glyphicon glyphicon-refresh"></span> loading ... </div>
+
+        <!-- <div class="text-center loading-container"><span class=" glyphicon glyphicon-refresh"></span> loading ... </div> -->
     </div>
     <div id="modify-area" class="col-md-4">
 
