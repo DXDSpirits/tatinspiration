@@ -1,7 +1,22 @@
 define(['jquery', 'underscore', 'backbone', 'model/inspiration'], 
 function($, _, Backbone, Inspiration){
-    var InspirationListView = Backbone.View.extend({
+
+    var InspirationListItemView = Backbone.View.extend({
         template: _.template($("#inpiration-list-item-template").html()),
+
+        setModel: function(model){
+            this.model = new Inspiration.Model(model);
+        },
+
+        render: function(){
+            this.undelegateEvents();
+            this.setElement(this.template({inspiration: this.model.attributes}));
+        },
+
+    });
+
+
+    var InspirationListView = Backbone.View.extend({
         collection: new Inspiration.Collection(),
 
         setCollection: function(collection){ // 
@@ -11,9 +26,11 @@ function($, _, Backbone, Inspiration){
         render: function(){
             var self = this;
             _.each(self.collection.models,function(obj){
-                var htmlContent = self.template({inspiration: obj.attributes});
-                // console.log(htmlContent);
-                self.$el.append(htmlContent);
+                var iliv = new InspirationListItemView();
+                iliv.setModel(obj.attributes);
+                iliv.render();
+                self.$el.append(iliv.$el);
+
             })
         },
         hide: function(){
