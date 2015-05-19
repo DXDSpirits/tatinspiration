@@ -54,7 +54,7 @@ def inspiration_search():
                         "model": "inspiration",
                         "keyword": query,
                         "next": next_page,
-                        "counter": len(result_list)
+                        "count": len(result_list)
                     },
                     "objects": [_.to_json() for _ in result_list[page*limit-limit:page*limit]],
             })
