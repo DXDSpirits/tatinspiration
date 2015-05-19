@@ -9,14 +9,25 @@ function($, _, Backbone){
         save: function(e){
             var self = this;
             e.preventDefault();
-            this._postSave();
             var content = this.$("[name=content]").val();
             this.model.set("content", content);
+            var labels = []
+            _.each($("option:selected"), function(option){
+                var $option = $(option);
+                var label = {}
+                label.id = $option.attr("value");
+                label.name = $option.html();
+                labels.push(label);
+            })
+            this.model.set("labels", labels);
+            this._postSave();
+            // this.remove();
         },
 
         _postSave: function(){ // save to server
-
+            this.model.post();
         },
+
 
         template: _.template($("#modify-board-template").html()),
 
