@@ -67,7 +67,7 @@
     color: firebrick;
 }
 
-#modify-board{
+#modify-board, #write-board{
     max-width: 480px;
     margin: 0 auto;
 }

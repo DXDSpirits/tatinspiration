@@ -1,11 +1,40 @@
-define(['jquery', 'underscore', 'backbone', 'model/inspiration'], 
-function($, _, Backbone, Inspiration){
+define(['jquery', 'underscore', 'backbone', 'model/inspiration', 'view/modify-view'], 
+function($, _, Backbone, Inspiration, ModifyView){
+    
+    var modifyView = new ModifyView({el: '#modify-area'});
 
     var InspirationListItemView = Backbone.View.extend({
+        events: {
+            'click  .sentence-wrapper': "modify",
+        },
+
+        model: new Inspiration.Model(),
+
+        initialize: function() {
+            this.listenTo(this.model, "change", this.render);
+        },
+
+        modify: function(e){
+            e.preventDefault();
+            modifyView.model = this.model;
+            modifyView.render();
+        },
+
+
+
         template: _.template($("#inpiration-list-item-template").html()),
 
         setModel: function(model){
             this.model = new Inspiration.Model(model);
+            this.stopListening();
+            this.listenTo(this.model, "change", this.modifyRender);
+        },
+
+        modifyRender: function(){
+            this.undelegateEvents();
+            var htmlContent = this.template({inspiration: this.model.attributes});
+            this.$el.html($(htmlContent).html());
+            this.delegateEvents();
         },
 
         render: function(){

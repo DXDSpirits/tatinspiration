@@ -1,7 +1,7 @@
 <script id="inpiration-list-item-template" type="underscore/tempalte">
 
 <div data-inspiration-id=<%= inspiration.id %> class="content clearfix">
-    <a href="/inspiration/<%=inspiration.id %>/modify"><pre class="sentence-item"><%= inspiration.content %></pre></a>
+    <a class="sentence-wrapper" href="/inspiration/<%=inspiration.id %>/modify"><pre class="sentence-item"><%= inspiration.content %></pre></a>
     <span class="label-container">
         <% _.each(inspiration.labels, function(label){ %>
             <a class="label label-default" href="#labelFilter=<%= label.id %>"><%= label.name %></a>
