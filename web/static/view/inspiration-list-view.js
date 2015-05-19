@@ -7,6 +7,7 @@ function($, _, Backbone, Inspiration, ModifyView){
         events: {
             'click  .sentence-wrapper': "modify",
         },
+        next: null,
 
         model: new Inspiration.Model(),
 

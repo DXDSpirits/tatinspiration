@@ -20,21 +20,18 @@ require(['model/inspiration',
          'bootstrap', 'select2', 'domReady!'], 
         function(
             Inspiration,
-            InspirationView,
+            InspirationListView,
             $, _, Backbone) {
 
     // console.log($);
     // console.log(_);
     // console.log(Backbone);
-    $("#label-input").select2({
-        placeholder: "labels",
-        tags: true,
-        tokenSeparators: [',', ' ']
-    });
 
     var Page = {};
     Page.currentPage = null;
-    Page.labelFilter = new InspirationView({el: "#label-filter-view.sentence-container"});
+    Page.main = new InspirationListView({el: "#main-view.sentence-container"});
+    Page.labelFilter = new InspirationListView({el: "#label-filter-view.sentence-container"});
+    Page.search = new InspirationListView({el: "#search-view.sentence-container"});
 
     Page.switchPage = function(page){
         if(Page.currentPage === page){
@@ -61,16 +58,28 @@ require(['model/inspiration',
 
         index: function(){
             // infinite scroll
-            // var throttle = _.throttle(function() {
-            //     if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
-            //         Backbone.trigger('next-page');
-            //     }
-            // }, 200);
-            // $(window).off("scroll")
-            // $(window).scroll(throttle);
+            $.get("/api/inspiration/?ordering=-id")
+             .done(function(data){
+                var inspirationData = data.objects;
+                Page.main.clear();
+                Page.main.next = data.meta.next;
+                Page.main.setCollection(inspirationData);
+                Page.main.render();
+                Page.switchPage(Page.main);
+             })
+
+
+            var throttle = _.throttle(function() {
+                if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
+                    Backbone.trigger('next-page');
+                }
+            }, 200);
+            $(window).off("scroll")
+            $(window).scroll(throttle);
         },
 
         labelFilter: function(labelId){
+            $(window).off("scroll")
             $.get("/api/labelinspirationrelationship/?label="+labelId)
              .done(function(data){
                 var inspirationData = _.pluck(data.objects, "inspiration");
@@ -82,16 +91,14 @@ require(['model/inspiration',
         },
 
         search: function(keyword){
+            $(window).off("scroll")
             $.get("/api/inspiration/search?q="+keyword)
              .done(function(data){
-                // console.log(data)
-                var $sentenceContainer = $('.sentence-container');
-                $sentenceContainer.html("");
-                _.each(data.objects,function(obj){
-                    var htmlContent = inpirationListItemTemplate({inspiration: obj});
-                    // console.log(htmlContent);
-                    $sentenceContainer.append(htmlContent)
-                })
+                var inspirationData = data.objects;
+                Page.search.clear();
+                Page.search.setCollection(inspirationData);
+                Page.search.render();
+                Page.switchPage(Page.search);
 
              });
         },
@@ -101,45 +108,37 @@ require(['model/inspiration',
     $(document).on("click", "#search-btn", function(e){
         var keyword = $("#keyword-input").val();
         router.navigate("search="+keyword, {trigger: true});
-        $(window).off("scroll")
     })
 
     $(document).on("submit", "#search-form", function(e){
         e.preventDefault();
         var keyword = $("#keyword-input").val();
         router.navigate("search="+keyword, {trigger: true});
-        $(window).off("scroll")
     })
 
     Backbone.on("next-page", function(){
         var curTime = new Date();
         var $loading = $(".loading-container").show();
 
-        var inspirationId = $("[data-inspiration-id]").last().data("inspiration-id");
-        if(inspirationId === 1){
+        if(! Page.main.next){
             $loading.hide()
             return ;
         }
 
         function _render(data){
-            $loading.hide()
-            var $sentenceContainer = $('.sentence-container');
-            // $sentenceContainer.html("");
-            _.each(data.objects,function(obj){
-                var htmlContent = inpirationListItemTemplate({inspiration: obj});
-                // console.log(htmlContent);
-                $sentenceContainer.append(htmlContent)
-            })
+            Page.main.next = data.meta.next;
+            Page.main.setCollection(data.objects);
+            Page.main.render();
+            Page.switchPage(Page.main);
         }
 
-
-        $.get("/api/inspiration/?ordering=-id&id__lt=" + inspirationId)
+        $.get(Page.main.next)
          .done(function(data){
             var delta = (new Date()) - curTime;
-            if( delta < 350){
+            if( delta < 550){
                 _.delay(function(){
                     _render(data);
-                }, 800);
+                }, 550 - delta);
             }else{
                 _render(data);
             }
