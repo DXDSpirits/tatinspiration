@@ -78,15 +78,35 @@ require(['model/inspiration',
             $(window).scroll(throttle);
         },
 
+
         labelFilter: function(labelId){
             $(window).off("scroll")
-            $.get("/api/labelinspirationrelationship/?label="+labelId)
-             .done(function(data){
+
+            function _renderLabelFilter(data){
                 var inspirationData = _.pluck(data.objects, "inspiration");
                 Page.labelFilter.clear();
                 Page.labelFilter.setCollection(inspirationData);
                 Page.labelFilter.render();
                 Page.switchPage(Page.labelFilter);
+            }
+
+            if(labelId === "0"){
+                $.get("/api/nolabel-inspiration/")
+                 .done(function(data){
+                    var inspirationData = data.objects;
+                    Page.labelFilter.clear();
+                    Page.labelFilter.setCollection(inspirationData);
+                    Page.labelFilter.render();
+                    Page.switchPage(Page.labelFilter);
+                 })
+
+                 return ;
+            }
+
+
+            $.get("/api/labelinspirationrelationship/?label="+labelId)
+             .done(function(data){
+                _renderLabelFilter(data);
              });
         },
 

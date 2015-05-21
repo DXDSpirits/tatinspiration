@@ -86,7 +86,16 @@ def api_modify_inspiration(inspiration_id):
     q.enqueue(inspiration.remake_keyword_index, label_list)
     return jsonify(rcode=200)
 
+@app.route('/api/nolabel-inspiration/')
+def nolabel_inspiration():
+    LIR = LabelInspirationRelationShip
+    LIR_list = LIR.select(LIR.inspiration).distinct()
 
+    inspiration_list = Inspiration.select().where(Inspiration.id.not_in(LIR_list))
+
+    inspiration_json = [inspiration.to_json() for inspiration in inspiration_list]
+
+    return jsonify({"objects": inspiration_json})
 
 
 
