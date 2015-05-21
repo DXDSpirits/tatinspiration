@@ -3,6 +3,7 @@
 {%block content%}
 
     <div id="label-containers" class="col-md-2">
+        <a  class="label label-warning" href="#labelFilter=all">全部</a>
         <a data-label-id="0" class="label label-danger" href="#labelFilter=0">没有标签</a>
         {%for label in labels%}
             <a data-label-id="{{label.id}}" class="label label-primary" href="#labelFilter={{label.id}}">{{label.name}}({{label.count}})</a>

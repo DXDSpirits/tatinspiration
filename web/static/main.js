@@ -29,7 +29,6 @@ require(['model/inspiration',
 
     var Page = {};
     Page.currentPage = null;
-    Page.main = new InspirationListView({el: "#main-view.sentence-container"});
     Page.labelFilter = new InspirationListView({el: "#label-filter-view.sentence-container"});
     Page.search = new InspirationListView({el: "#search-view.sentence-container"});
 
@@ -51,40 +50,19 @@ require(['model/inspiration',
 
     var router = new (Backbone.Router.extend({
         routes: {
-            "": "index",
+            "": "labelFilter",
             "labelFilter=:labelId": "labelFilter", // #search/kiwis/p7
             "search=:keyword": "search"
         },
 
-        index: function(){
-            // infinite scroll
-            $.get("/api/inspiration/?ordering=-id")
-             .done(function(data){
-                var inspirationData = data.objects;
-                Page.main.clear();
-                Page.main.next = data.meta.next;
-                Page.main.setCollection(inspirationData);
-                Page.main.render();
-                Page.switchPage(Page.main);
-             })
-
-
-            var throttle = _.throttle(function() {
-                if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
-                    Backbone.trigger('next-page');
-                }
-            }, 200);
-            $(window).off("scroll")
-            $(window).scroll(throttle);
-        },
-
 
         labelFilter: function(labelId){
-            $(window).off("scroll")
+            var labelId = labelId || "all"
 
             function _renderLabelFilter(data){
                 var inspirationData = _.pluck(data.objects, "inspiration");
                 Page.labelFilter.clear();
+                Page.labelFilter.next = data.meta.next
                 Page.labelFilter.setCollection(inspirationData);
                 Page.labelFilter.render();
                 Page.switchPage(Page.labelFilter);
@@ -103,6 +81,14 @@ require(['model/inspiration',
                  return ;
             }
 
+            if(labelId === "all"){
+                $.get("/api/labelinspirationrelationship/")
+                 .done(function(data){
+                    _renderLabelFilter(data);
+                 });
+                 return ;
+            }
+
 
             $.get("/api/labelinspirationrelationship/?label="+labelId)
              .done(function(data){
@@ -111,11 +97,11 @@ require(['model/inspiration',
         },
 
         search: function(keyword){
-            $(window).off("scroll")
             $.get("/api/inspiration/search?q="+keyword)
              .done(function(data){
                 var inspirationData = data.objects;
                 Page.search.clear();
+                Page.search.next = data.meta.next
                 Page.search.setCollection(inspirationData);
                 Page.search.render();
                 Page.switchPage(Page.search);
@@ -140,19 +126,18 @@ require(['model/inspiration',
         var curTime = new Date();
         var $loading = $(".loading-container").show();
 
-        if(! Page.main.next){
+        if(! Page.currentPage.next){
             $loading.hide()
             return ;
         }
 
         function _render(data){
-            Page.main.next = data.meta.next;
-            Page.main.setCollection(data.objects);
-            Page.main.render();
-            Page.switchPage(Page.main);
+            Page.currentPage.next = data.meta.next;
+            Page.currentPage.setCollection(_.pluck(data.objects, "inspiration"));
+            Page.currentPage.render();
         }
 
-        $.get(Page.main.next)
+        $.get(Page.currentPage.next)
          .done(function(data){
             var delta = (new Date()) - curTime;
             if( delta < 550){
@@ -167,9 +152,15 @@ require(['model/inspiration',
 
     })
 
+    var throttle = _.throttle(function() {
+        if ($(window).scrollTop() + $(window).height() >= $('body').height() - 260) {
+            Backbone.trigger('next-page');
+        }
+    }, 200);
+    $(window).off("scroll")
+    $(window).scroll(throttle);
 
     Backbone.history.start()
-
 
 
 

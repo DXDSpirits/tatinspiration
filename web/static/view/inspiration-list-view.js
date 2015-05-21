@@ -50,7 +50,7 @@ function($, _, Backbone, Inspiration, ModifyView){
         collection: new Inspiration.Collection(),
 
         setCollection: function(collection){ // 
-            this.collection = new Inspiration.Collection(collection);
+            this.collection.reset(collection)
         },
 
         render: function(){
