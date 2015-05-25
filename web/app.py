@@ -3,6 +3,7 @@ import logging
 
 from flask import Flask
 from flask.ext.assets import Environment, Bundle
+from flask.ext.cors import CORS
 from flask_peewee.auth import Auth
 from flask_peewee.db import Database
 import config.conf as conf
@@ -20,6 +21,7 @@ def setup_logging():
 db = Database(app)
 # needed for authentication
 auth = Auth(app, db)
+cors = CORS(app)
 
 # assets = Environment(app)
 # assets.versions = 'hash:32'
