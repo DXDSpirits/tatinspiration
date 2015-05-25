@@ -2,12 +2,12 @@
 import re
 import time
 
-from flask import render_template, request, redirect, flash, session, jsonify
+from flask import render_template, request, redirect, flash, session
 from whoosh import qparser
 
 from web.app import app, auth
 from web.model import Label, Inspiration, LabelInspirationRelationShip
-from web.util import get_whoosh_ix, q
+from web.util import get_whoosh_ix, q, compress_jsonify
 
 @app.route('/api/inspiration/search')
 def inspiration_search():
@@ -48,7 +48,7 @@ def inspiration_search():
         next_page += "&".join(args_list)
 
 
-    return jsonify({
+    return compress_jsonify({
                     "meta": {
                         "total_time": time.time()-start_time,
                         "model": "inspiration",

@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 import os
 from functools import wraps
-
-from flask import session, request, redirect, url_for
+from json import dumps
+from flask import session, request, redirect, url_for, make_response
 import whoosh.index
 from whoosh.filedb.filestore import FileStorage
 from redis import Redis
@@ -53,7 +53,12 @@ def _get_whoosh_ix():
         return ix.get(schemaName)
 
     return _
-
+def compress_jsonify(*args, **kwargs):
+    response = make_response(dumps(dict(*args, **kwargs), indent=None, sort_keys=False, ensure_ascii=False))
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    response.headers['mimetype'] = 'application/json'
+    response.status_code = 200
+    return response
 
 q = Queue(connection=_redis)
 get_whoosh_ix = _get_whoosh_ix()
