@@ -60,7 +60,9 @@ require(['model/inspiration',
             var labelId = labelId || "all"
 
             function _renderLabelFilter(data){
-                var inspirationData = _.pluck(data.objects, "inspiration");
+                var inspirationData = _.sortBy(_.pluck(data.objects, "inspiration"), function(obj){
+                    return -obj.id
+                });
                 Page.labelFilter.clear();
                 Page.labelFilter.next = data.meta.next
                 Page.labelFilter.setCollection(inspirationData);

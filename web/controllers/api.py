@@ -15,6 +15,7 @@ class InspirationResource(RestResource):
 api.register(Inspiration, InspirationResource)
 
 class LabelInspirationRelationShipResource(RestResource):
+    paginate_by = 200
     def prepare_data(self, obj, data):
         inspiration_id = data["inspiration"]
         inspiration = Inspiration.select().where(Inspiration.id == inspiration_id).first()
