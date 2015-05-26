@@ -8,15 +8,16 @@ from whoosh import qparser
 from web.app import app, auth
 from web.model import Label, Inspiration, LabelInspirationRelationShip
 from web.util import get_whoosh_ix, q, compress_jsonify
+from web.util.lru import lru_cache_function
 
-@app.route('/api/inspiration/search')
-def inspiration_search():
-    start_time = time.time()
+
+
+
+@lru_cache_function(max_size=64, expiration=15*60)
+def _search(query, page, limit):
     from web.model.whoose_schema import InspirationSchema
-    query = request.args.get("q", "").strip()
-    page = int(request.args.get("page") or 1) ## data validation
-    limit = int(request.args.get("limit") or 10)
     result_list = []
+    total = 0
 
     ## do the search
 
@@ -27,15 +28,15 @@ def inspiration_search():
         search_expression = parser.parse(query)
         # app.logger.info("search_expression: %s", search_expression)
 
-        results = searcher.search(search_expression, limit=None)
-
+        results = searcher.search(search_expression, limit=limit)
+        total = len(results)
 
         result_list = filter(None, [Inspiration.select().where(Inspiration.id==r["inspiration_id"]).first() \
                                      for r in results])
 
     app.logger.info("keyword:%s ==> %d result(s) found", query, len(result_list))
     next_page = ""
-    if page*limit < len(result_list):
+    if page*limit < total:
         next_page = request.script_root + request.path + "?"
         args_list = []
         for k in request.args:
@@ -47,17 +48,30 @@ def inspiration_search():
             args_list.append("page=%d"%(page+1))
         next_page += "&".join(args_list)
 
+    return {
+            "meta": {
+                "model": "inspiration",
+                "keyword": query,
+                "next": next_page,
+                "count": total
+            },
+            "objects": [_.to_json() for _ in result_list[page*limit-limit:page*limit]],
+    }
 
-    return compress_jsonify({
-                    "meta": {
-                        "total_time": time.time()-start_time,
-                        "model": "inspiration",
-                        "keyword": query,
-                        "next": next_page,
-                        "count": len(result_list)
-                    },
-                    "objects": [_.to_json() for _ in result_list[page*limit-limit:page*limit]],
-            })
+
+@app.route('/api/inspiration/search')
+def inspiration_search():
+    start_time = time.time()
+    query = request.args.get("q", "").strip()
+    page = int(request.args.get("page") or 1) ## data validation
+    limit = int(request.args.get("limit") or 100)
+
+    dict_data = _search(query, page, limit)
+    dict_data["meta"]["total_time"] = time.time() - start_time
+
+    return compress_jsonify(dict_data)
+
+    
 
 
 
