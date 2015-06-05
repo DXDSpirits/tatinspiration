@@ -28,13 +28,13 @@ def _search(query, page, limit):
         search_expression = parser.parse(query)
         # app.logger.info("search_expression: %s", search_expression)
 
-        results = searcher.search(search_expression, limit=limit)
+        results = searcher.search_page(search_expression, page, pagelen=limit)
         total = len(results)
 
         result_list = filter(None, [Inspiration.select().where(Inspiration.id==r["inspiration_id"]).first() \
                                      for r in results])
 
-    app.logger.info("keyword:%s ==> %d result(s) found", query, len(result_list))
+    app.logger.info("keyword:%s ==> %d result(s) found", query, total)
     next_page = ""
     if page*limit < total:
         next_page = request.script_root + request.path + "?"
@@ -55,7 +55,7 @@ def _search(query, page, limit):
                 "next": next_page,
                 "count": total
             },
-            "objects": [_.to_json() for _ in result_list[page*limit-limit:page*limit]],
+            "objects": [_.to_json() for _ in result_list]
     }
 
 
