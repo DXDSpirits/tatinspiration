@@ -14,19 +14,20 @@ from web.util.lru import lru_cache_function
 
 
 @lru_cache_function(max_size=64, expiration=15*60)
-def _search(query, page, limit):
+def _search(query, page, limit, group=None):
     from web.model.whoose_schema import InspirationSchema
     result_list = []
     total = 0
+    group = group or qparser.OrGroup
 
     ## do the search
 
     ix = get_whoosh_ix("inspiration", InspirationSchema)
 
     with ix.searcher() as searcher:
-        parser = qparser.MultifieldParser(["labels" ,"content"], schema=ix.schema, group=qparser.OrGroup)
+        parser = qparser.MultifieldParser(["labels" ,"content"], schema=ix.schema, group=group)
         search_expression = parser.parse(query)
-        # app.logger.info("search_expression: %s", search_expression)
+        app.logger.info("search_expression: %s", search_expression)
 
         results = searcher.search_page(search_expression, page, pagelen=limit)
         total = len(results)
@@ -72,6 +73,19 @@ def inspiration_search():
     return compress_jsonify(dict_data)
 
     
+
+@app.route('/api/inspiration/and-search')
+def inspiration_and_search():
+    start_time = time.time()
+    query = request.args.get("q", "").strip()
+    page = int(request.args.get("page") or 1) ## data validation
+    limit = int(request.args.get("limit") or 100)
+
+    dict_data = _search(query, page, limit, group=qparser.AndGroup)
+    dict_data["meta"]["total_time"] = time.time() - start_time
+
+    return compress_jsonify(dict_data)
+
 
 
 
