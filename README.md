@@ -22,6 +22,32 @@ REST API是用 flask-peewee 生成, 具体可以看*web/controllers/api*文件. 
 
 中文分词是使用 jieba 的.
 
+用了很简单的消息队列模块: [python-rq](http://python-rq.org/)
+
+
+## 文件组织结构
+```
+.
+├── deploy_config  ------ not used in this project
+├── fall           ------ not used in this project
+├── tools          ------ not used in this project
+├── unittests      ------ not used in this project, 
+│                  ------ but you could write some unittest here by 'nosetest'
+└── web            ------ contain main code 
+    ├── admin
+    ├── blueprints
+    ├── config
+    ├── controllers  -- search_api define /search /and-search
+    ├── libs
+    ├── model -- define models
+    ├── static
+    └── util  -- lru, whoose redis storage
+```
+
+
+
+
+
 
 
 

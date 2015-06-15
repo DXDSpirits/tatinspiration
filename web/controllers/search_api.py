@@ -15,6 +15,12 @@ from web.util.lru import lru_cache_function
 
 @lru_cache_function(max_size=64, expiration=15*60)
 def _search(query, page, limit, group=None):
+    '''
+        query == keywords
+        page starts from 1
+        group: https://pythonhosted.org/Whoosh/api/qparser.html?highlight=qparser.orgroup#group-nodes
+
+    '''
     from web.model.whoose_schema import InspirationSchema
     result_list = []
     total = 0
