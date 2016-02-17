@@ -44,6 +44,50 @@ REST API是用 flask-peewee 生成, 具体可以看*web/controllers/api*文件. 
     └── util  -- lru, whoose redis storage
 ```
 
+## supervisord.ini
+
+[program:boring]
+command=/root/workspace/tatinspiration/env/bin/gunicorn -b 127.0.0.1:9988 web.app:app
+directory=/root/workspace/tatinspiration
+user=root
+autostart=true
+autorestart=true
+;redirect_stderr=true
+;stdout_logfile=/root/workspace/tatinspiration/boring.log
+;stdout_logfile_maxbytes=0
+;stderr_logfile=/root/workspace/tatinspiration/boring_error.log
+
+
+[program:boring-worker]
+; Point the command to the specific rqworker command you want to run.
+; If you use virtualenv, be sure to point it to
+; /path/to/virtualenv/bin/rqworker
+; Also, you probably want to include a settings module to configure this
+; worker.  For more info on that, see http://python-rq.org/docs/workers/
+command=/root/workspace/tatinspiration/env/bin/python /root/workspace/tatinspiration/myrqworker.py
+process_name=%(program_name)s
+
+; If you want to run more than one worker instance, increase this
+numprocs=1
+
+; This is the directory from which RQ is ran. Be sure to point this to the
+; directory where your source code is importable from
+directory=/root/workspace/tatinspiration
+
+; RQ requires the TERM signal to perform a warm shutdown. If RQ does not die
+; within 10 seconds, supervisor will forcefully kill it
+stopsignal=TERM
+
+; These are up to you
+autostart=true
+autorestart=true
+
+;[program:compose]
+;command=/root/workspace/tatcompose/bin/www
+;directory=/root/workspace/tatcompose
+;user=root
+;autostart=true
+;autorestart=true
 
 
 
