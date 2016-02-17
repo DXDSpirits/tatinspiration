@@ -46,6 +46,7 @@ REST API是用 flask-peewee 生成, 具体可以看*web/controllers/api*文件. 
 
 ## supervisord.ini
 
+```
 [program:boring]
 command=/root/workspace/tatinspiration/env/bin/gunicorn -b 127.0.0.1:9988 web.app:app
 directory=/root/workspace/tatinspiration
@@ -88,10 +89,4 @@ autorestart=true
 ;user=root
 ;autostart=true
 ;autorestart=true
-
-
-
-
-
-
-
+```
